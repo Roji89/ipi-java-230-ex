@@ -1,8 +1,10 @@
 package com.ipiecoles.java.java230;
 
 import com.ipiecoles.java.java230.model.Employe;
+import com.ipiecoles.java.java230.model.Manager;
 import com.ipiecoles.java.java230.model.Technicien;
 import com.ipiecoles.java.java230.repository.EmployeRepository;
+import com.ipiecoles.java.java230.repository.ManagerRepository;
 import com.ipiecoles.java.java230.repository.TechnicianRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +24,9 @@ public class MyRunner implements CommandLineRunner {
     @Autowired
     private TechnicianRepository technicienRepository;
 
+    @Autowired
+    private ManagerRepository managerRepository;
+
     @Override
     public void run(String... strings) throws Exception {
         System.out.println(employeRepository.count());
@@ -32,11 +37,11 @@ public class MyRunner implements CommandLineRunner {
         System.out.println(employe.toString());
 
 
-        List<Employe> employes = employeRepository.findByNomAndPrenom("gaillard", "victor");
-        System.out.println(employes.toString());
-
-        List<Employe> employes2 = employeRepository.findByNomIgnoreCase("poiRier");
-        System.out.println(employes2.toString());
+//        List<Employe> employes = employeRepository.findByNomAndPrenom("gaillard", "victor");
+//        System.out.println(employes.toString());
+//
+//        List<Employe> employes2 = employeRepository.findByNomIgnoreCase("poiRier");
+//        System.out.println(employes2.toString());
 
 //        //pagination
 //        PageRequest pageRequest = PageRequest.of(0, 5, Sort.Direction.ASC, "prenom");
@@ -54,9 +59,19 @@ public class MyRunner implements CommandLineRunner {
 //        }
 
         PageRequest pageRequest2 = PageRequest.of(0, 3, Sort.Direction.ASC, "matricule");
-        List<Technicien> employes3 = technicienRepository.findAll();
-        for(Employe employe4 : employes){
-            System.out.println("Technicien"+ employe4.toString());
+        Page<Employe> employes3 = employeRepository.findAll(pageRequest2);
+        for(Employe employe3 : employes3){
+            System.out.println("Technicien"+ employe3.toString());
+        }
+
+        Technicien technicien = technicienRepository.findById(3L).get();
+        System.out.println(technicien.toString());
+        System.out.println(technicien.getManager().toString());
+
+        Manager manager = managerRepository.findWithEquipeById(5L);
+        System.out.println(manager.toString());
+        for(Technicien t : manager.getEquipe()){
+            System.out.println();
         }
     }
     public static void print(Object t) {
